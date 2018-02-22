@@ -352,6 +352,53 @@ class TestBigQuery(unittest.TestCase):
         page = six.next(iterator.pages)
         return list(page)
 
+    def _create_table_many_columns(self, rows):
+        # Load a table with many columns
+        dataset = self.temp_dataset(_make_dataset_id('list_rows'))
+        table_id = 'many_columns'
+        table_ref = dataset.table(table_id)
+        self.to_delete.insert(0, table_ref)
+        schema = [
+            bigquery.SchemaField(
+                'column_{}_with_long_name'.format(col_i),
+                'INTEGER')
+            for col_i in range(len(rows[0]))]
+        body = six.StringIO(
+            '{}\n{}\n'.format(','.join(rows[0]), ','.join(rows[1])))
+        config = bigquery.LoadJobConfig()
+        config.schema = schema
+        job = Config.CLIENT.load_table_from_file(
+            body, table_ref, job_config=config)
+        job.result()
+        return table_ref, schema
+
+    def test_list_rows_many_columns(self):
+        rows = [[], []]
+        for col_i in range(1000):
+            rows[0].append(str(col_i))
+            rows[1].append(str(10000 - col_i))
+        table_ref, schema = self._create_table_many_columns(rows)
+
+        rows = list(Config.CLIENT.list_rows(table_ref, selected_fields=schema))
+
+        assert len(rows) == 2
+        assert rows[0][437] == 437
+        assert rows[1][9999] == 1
+
+    def test_query_many_columns(self):
+        rows = [[], []]
+        for col_i in range(1000):
+            rows[0].append(str(col_i))
+            rows[1].append(str(10000 - col_i))
+        table_ref, _ = self._create_table_many_columns(rows)
+
+        rows = list(Config.CLIENT.query(
+            'SELECT * FROM `{}.many_columns`'.format(table_ref.dataset_id)))
+
+        assert len(rows) == 2
+        assert rows[0][437] == 437
+        assert rows[1][9999] == 1
+
     def test_insert_rows_then_dump_table(self):
         NOW_SECONDS = 1448911495.484366
         NOW = datetime.datetime.utcfromtimestamp(
