@@ -363,41 +363,45 @@ class TestBigQuery(unittest.TestCase):
                 'column_{}_with_long_name'.format(col_i),
                 'INTEGER')
             for col_i in range(len(rows[0]))]
-        body = six.StringIO(
-            '{}\n{}\n'.format(','.join(rows[0]), ','.join(rows[1])))
+        body = ''
+        for row in rows:
+            body += ','.join([str(item) for item in row])
+            body += '\n'
         config = bigquery.LoadJobConfig()
         config.schema = schema
         job = Config.CLIENT.load_table_from_file(
-            body, table_ref, job_config=config)
+            six.StringIO(body), table_ref, job_config=config)
         job.result()
         return table_ref, schema
 
     def test_list_rows_many_columns(self):
         rows = [[], []]
         for col_i in range(1000):
-            rows[0].append(str(col_i))
-            rows[1].append(str(10000 - col_i))
+            rows[0].append(col_i)
+            rows[1].append(10000 - col_i)
+        expected_rows = frozenset([tuple(row) for row in rows])
         table_ref, schema = self._create_table_many_columns(rows)
 
         rows = list(Config.CLIENT.list_rows(table_ref, selected_fields=schema))
 
         assert len(rows) == 2
-        assert rows[0][437] == 437
-        assert rows[1][9999] == 1
+        rows_set = frozenset([tuple(row.values()) for row in rows])
+        assert rows_set == expected_rows
 
     def test_query_many_columns(self):
         rows = [[], []]
         for col_i in range(1000):
-            rows[0].append(str(col_i))
-            rows[1].append(str(10000 - col_i))
+            rows[0].append(col_i)
+            rows[1].append(10000 - col_i)
+        expected_rows = frozenset([tuple(row) for row in rows])
         table_ref, _ = self._create_table_many_columns(rows)
 
         rows = list(Config.CLIENT.query(
             'SELECT * FROM `{}.many_columns`'.format(table_ref.dataset_id)))
 
         assert len(rows) == 2
-        assert rows[0][437] == 437
-        assert rows[1][9999] == 1
+        rows_set = frozenset([tuple(row.values()) for row in rows])
+        assert rows_set == expected_rows
 
     def test_insert_rows_then_dump_table(self):
         NOW_SECONDS = 1448911495.484366
