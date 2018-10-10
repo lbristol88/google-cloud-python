@@ -14,6 +14,7 @@
 
 """Shared implementation of connections to API servers."""
 
+import os
 import json
 import platform
 
@@ -178,7 +179,12 @@ class JSONConnection(Connection):
         if content_type:
             headers['Content-Type'] = content_type
 
-        headers['User-Agent'] = self.USER_AGENT
+        user_agent = self.USER_AGENT
+        metrics_environment = os.environ.get('CLOUDSDK_METRICS_ENVIRONMENT')
+        if metrics_environment:
+            user_agent += (' ' + metrics_environment)
+
+        headers['User-Agent'] = user_agent
 
         return self._do_request(method, url, headers, data, target_object)
 

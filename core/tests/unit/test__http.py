@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import json
 import unittest
 
 import mock
 import requests
 from six.moves import http_client
+import pytest
+
+
+@pytest.fixture
+def empty_metrics_env(monkeypatch):
+    # TODO
 
 
 class TestConnection(unittest.TestCase):
@@ -47,6 +54,14 @@ class TestConnection(unittest.TestCase):
         self.assertIs(conn.http, client._http)
 
     def test_user_agent_format(self):
+        from pkg_resources import get_distribution
+
+        expected_ua = 'gcloud-python/{0}'.format(
+            get_distribution('google-cloud-core').version)
+        conn = self._make_one(object())
+        self.assertEqual(conn.USER_AGENT, expected_ua)
+
+    def test_user_agent_metrics_environment(self):
         from pkg_resources import get_distribution
 
         expected_ua = 'gcloud-python/{0}'.format(
