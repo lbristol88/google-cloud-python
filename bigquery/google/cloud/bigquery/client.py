@@ -1741,14 +1741,10 @@ class Client(ClientWithProject):
         if selected_fields is not None:
             schema = selected_fields
 
-        # Allow listing rows of an empty table by not raising if the table exists.
-        elif len(schema) == 0 and table.created is None:
-            raise ValueError(
-                (
-                    "Could not determine schema for table '{}'. Call client.get_table() "
-                    "or pass in a list of schema fields to the selected_fields argument."
-                ).format(table)
-            )
+        # No schema, but no selected_fields. Assume the developer wants all
+        # columns, so get the table resource for them rather than failing.
+        elif len(schema) == 0:
+            table = self.get_table(table.reference, retry=retry)
 
         params = {}
         if selected_fields is not None:
