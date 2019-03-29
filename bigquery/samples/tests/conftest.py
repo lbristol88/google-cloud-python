@@ -26,6 +26,22 @@ def client():
 
 
 @pytest.fixture
+def project_id(client):
+    return client.project
+
+
+@pytest.fixture
+def table_id(client, dataset_id):
+    now = datetime.datetime.now()
+    table_id = "example_table_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    table = client.create_table("{}.{}".format(dataset_id, table_id))
+    yield "{}".format(table.full_table_id)
+    client.delete_table(table, delete_contents=True)
+
+
+@pytest.fixture
 def dataset_id(client):
     now = datetime.datetime.now()
     dataset_id = "python_samples_{}_{}".format(
