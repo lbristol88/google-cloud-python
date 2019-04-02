@@ -16,7 +16,7 @@ from .. import create_table
 
 
 def test_table_samples(capsys, client, dataset_id, random_table_id):
-    """Since creating a table is a long operation, test all table model samples
+    """Since creating a table is a long operation, test all table samples
     in the same test, following a typical end-to-end flow.
     """
     create_table.create_table(client, random_table_id)
