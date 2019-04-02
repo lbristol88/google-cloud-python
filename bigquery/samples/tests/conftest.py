@@ -41,7 +41,7 @@ def dataset_id(client):
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
     dataset = client.create_dataset(dataset_id)
-    return "{}.{}".format(dataset.project, dataset.dataset_id)
+    yield "{}.{}".format(dataset.project, dataset.dataset_id)
     client.delete_dataset(dataset, delete_contents=True)
 
 
