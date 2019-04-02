@@ -15,10 +15,8 @@
 from .. import create_table
 
 
-def test_table_samples(capsys, client, random_table_id):
-    """Since creating a table is a long operation, test all table samples
-    in the same test, following a typical end-to-end flow.
-    """
+def test_create_table(capsys, client, random_table_id):
+
     create_table.create_table(client, random_table_id)
     out, err = capsys.readouterr()
     assert "Created table {}".format(random_table_id) in out

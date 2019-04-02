@@ -26,17 +26,12 @@ def client():
 
 
 @pytest.fixture
-def project_id(client):
-    return client.project
-
-
-@pytest.fixture
 def random_table_id(client, dataset_id):
     now = datetime.datetime.now()
     random_table_id = "example_table_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    yield "{}.{}".format(dataset_id, random_table_id)
+    return "{}.{}".format(dataset_id, random_table_id)
 
 
 @pytest.fixture
@@ -46,7 +41,7 @@ def dataset_id(client):
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
     dataset = client.create_dataset(dataset_id)
-    yield "{}.{}".format(dataset.project, dataset.dataset_id)
+    return "{}.{}".format(dataset.project, dataset.dataset_id)
     client.delete_dataset(dataset, delete_contents=True)
 
 
