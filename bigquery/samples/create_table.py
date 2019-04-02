@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_table():
+def create_table(client, table_id):
 
     # [START bigquery_create_table]
     from google.cloud import bigquery
@@ -26,15 +26,12 @@ def create_table():
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set project, dataset, and table IDs
-    # project_id = "your-project"
-    # dataset_id = "your_dataset"
-    # table_id = "table_name"
+    # TODO(developer): Set table_id to the ID of the table to create
+    # table_id = "your-project.your_dataset.your_table_name"
 
-    table = bigquery.Table(
-        "{}.{}.{}".format(project_id, dataset_id, table_id), schema=schema
-    )
-
+    table = bigquery.Table(table_id, schema=schema)
     table = client.create_table(table)  # API request
-    print("Created table {}".format(table.full_table_id))
+    print(
+        "Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
+    )
     # [END bigquery_create_table]

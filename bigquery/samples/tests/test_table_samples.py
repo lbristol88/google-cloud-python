@@ -15,11 +15,10 @@
 from .. import create_table
 
 
-def test_table_samples(capsys, client, project_id, dataset_id, table_id):
+def test_table_samples(capsys, client, dataset_id, random_table_id):
     """Since creating a table is a long operation, test all table model samples
     in the same test, following a typical end-to-end flow.
     """
-    create_table.create_table(client, project_id, dataset_id, table_id)
+    create_table.create_table(client, random_table_id)
     out, err = capsys.readouterr()
-    assert create_table in out
-    assert table.table_id == "my_table"
+    assert "Created table {}".format(random_table_id) in out

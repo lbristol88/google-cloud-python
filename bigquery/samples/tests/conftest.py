@@ -31,14 +31,12 @@ def project_id(client):
 
 
 @pytest.fixture
-def table_id(client, dataset_id):
+def random_table_id(client, dataset_id):
     now = datetime.datetime.now()
-    table_id = "example_table_{}_{}".format(
+    random_table_id = "example_table_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    table = client.create_table("{}.{}".format(dataset_id, table_id))
-    yield "{}".format(table.full_table_id)
-    client.delete_table(table, delete_contents=True)
+    yield "{}.{}".format(dataset_id, random_table_id)
 
 
 @pytest.fixture
