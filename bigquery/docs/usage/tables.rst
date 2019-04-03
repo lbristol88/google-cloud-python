@@ -22,7 +22,7 @@ Getting a Table
 Get a table resource with the
 :func:`~google.cloud.bigquery.client.Client.get_table` method:
 
-.. literalinclude:: ../snippets.py
+.. literalinclude:: ../samples/get_table.py
    :language: python
    :dedent: 4
    :start-after: [START bigquery_get_table]

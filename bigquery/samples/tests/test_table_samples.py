@@ -14,6 +14,7 @@
 
 from .. import create_table
 from .. import list_tables
+from .. import get_table
 
 
 def test_table_samples(capsys, client, random_table_id, dataset_id):
@@ -25,3 +26,7 @@ def test_table_samples(capsys, client, random_table_id, dataset_id):
     list_tables.list_tables(client, dataset_id)
     out, err = capsys.readouterr()
     assert "Tables contained in '{}':".format(dataset_id) in out
+
+    get_table.get_table(client, random_table_id)
+    out, err = capsys.readouterr()
+    assert random_table_id in out

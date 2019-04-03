@@ -456,40 +456,6 @@ def test_load_and_query_partitioned_table(client, to_delete):
     assert len(rows) == 29
 
 
-def test_get_table_information(client, to_delete):
-    """Show a table's properties."""
-    dataset_id = "show_table_dataset_{}".format(_millis())
-    table_id = "show_table_table_{}".format(_millis())
-    dataset_ref = client.dataset(dataset_id)
-    dataset = bigquery.Dataset(dataset_ref)
-    client.create_dataset(dataset)
-    to_delete.append(dataset)
-
-    table = bigquery.Table(dataset.table(table_id), schema=SCHEMA)
-    table.description = ORIGINAL_DESCRIPTION
-    table = client.create_table(table)
-
-    # [START bigquery_get_table]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_id = 'my_dataset'
-    # table_id = 'my_table'
-
-    dataset_ref = client.dataset(dataset_id)
-    table_ref = dataset_ref.table(table_id)
-    table = client.get_table(table_ref)  # API Request
-
-    # View table properties
-    print(table.schema)
-    print(table.description)
-    print(table.num_rows)
-    # [END bigquery_get_table]
-
-    assert table.schema == SCHEMA
-    assert table.description == ORIGINAL_DESCRIPTION
-    assert table.num_rows == 0
-
-
 # [START bigquery_table_exists]
 def table_exists(client, table_reference):
     """Return if a table exists.
