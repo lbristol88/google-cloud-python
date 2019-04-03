@@ -10,7 +10,7 @@ Listing Tables
 List the tables belonging to a dataset with the
 :func:`~google.cloud.bigquery.client.Client.list_tables` method:
 
-.. literalinclude:: ../snippets.py
+.. literalinclude:: ../samples/list_tables.py
    :language: python
    :dedent: 4
    :start-after: [START bigquery_list_tables]
