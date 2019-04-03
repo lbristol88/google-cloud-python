@@ -13,10 +13,15 @@
 # limitations under the License.
 
 from .. import create_table
+from .. import list_tables
 
 
-def test_create_table(capsys, client, random_table_id):
+def test_table_samples(capsys, client, random_table_id, dataset_id):
 
     create_table.create_table(client, random_table_id)
     out, err = capsys.readouterr()
     assert "Created table {}".format(random_table_id) in out
+
+    list_tables.list_tables(client, dataset_id)
+    out, err = capsys.readouterr()
+    assert "Tables contained in '{}':".format(dataset_id) in out
