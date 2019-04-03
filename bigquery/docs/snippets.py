@@ -1774,37 +1774,6 @@ def test_extract_table_compressed(client, to_delete):
     to_delete.insert(0, blob)
 
 
-def test_delete_table(client, to_delete):
-    """Delete a table."""
-    from google.cloud.exceptions import NotFound
-
-    dataset_id = "delete_table_dataset_{}".format(_millis())
-    table_id = "delete_table_table_{}".format(_millis())
-    dataset_ref = client.dataset(dataset_id)
-    dataset = bigquery.Dataset(dataset_ref)
-    dataset.location = "US"
-    dataset = client.create_dataset(dataset)
-    to_delete.append(dataset)
-
-    table_ref = dataset.table(table_id)
-    table = bigquery.Table(table_ref, schema=SCHEMA)
-    client.create_table(table)
-    # [START bigquery_delete_table]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_id = 'my_dataset'
-    # table_id = 'my_table'
-
-    table_ref = client.dataset(dataset_id).table(table_id)
-    client.delete_table(table_ref)  # API request
-
-    print("Table {}:{} deleted.".format(dataset_id, table_id))
-    # [END bigquery_delete_table]
-
-    with pytest.raises(NotFound):
-        client.get_table(table)  # API request
-
-
 def test_undelete_table(client, to_delete):
     dataset_id = "undelete_table_dataset_{}".format(_millis())
     table_id = "undelete_table_table_{}".format(_millis())

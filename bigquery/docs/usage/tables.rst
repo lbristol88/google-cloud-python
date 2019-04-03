@@ -140,7 +140,7 @@ Deleting a Table
 Delete a table with the
 :func:`~google.cloud.bigquery.client.Client.delete_table` method:
 
-.. literalinclude:: ../snippets.py
+.. literalinclude:: ../samples/delete_table.py
    :language: python
    :dedent: 4
    :start-after: [START bigquery_delete_table]

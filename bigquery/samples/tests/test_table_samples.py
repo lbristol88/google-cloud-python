@@ -15,6 +15,7 @@
 from .. import create_table
 from .. import list_tables
 from .. import get_table
+from .. import delete_table
 
 
 def test_table_samples(capsys, client, random_table_id, dataset_id):
@@ -30,3 +31,7 @@ def test_table_samples(capsys, client, random_table_id, dataset_id):
     get_table.get_table(client, random_table_id)
     out, err = capsys.readouterr()
     assert random_table_id in out
+
+    delete_table.delete_table(client, random_table_id)
+    out, err = capsys.readouterr()
+    assert "Deleted table '{}'.".format(random_table_id) in out
