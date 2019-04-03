@@ -497,31 +497,6 @@ def test_delete_dataset(client):
             client.get_dataset(dataset)  # API request
 
 
-def test_list_tables(client, to_delete):
-    """List tables within a dataset."""
-    dataset_id = "list_tables_dataset_{}".format(_millis())
-    dataset_ref = client.dataset(dataset_id)
-    dataset = client.create_dataset(bigquery.Dataset(dataset_ref))
-    to_delete.append(dataset)
-
-    # [START bigquery_list_tables]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_ref = client.dataset('my_dataset')
-
-    tables = list(client.list_tables(dataset_ref))  # API request(s)
-    assert len(tables) == 0
-
-    table_ref = dataset.table("my_table")
-    table = bigquery.Table(table_ref)
-    client.create_table(table)  # API request
-    tables = list(client.list_tables(dataset))  # API request(s)
-
-    assert len(tables) == 1
-    assert tables[0].table_id == "my_table"
-    # [END bigquery_list_tables]
-
-
 def test_create_table_nested_repeated_schema(client, to_delete):
     dataset_id = "create_table_nested_repeated_{}".format(_millis())
     dataset_ref = client.dataset(dataset_id)
