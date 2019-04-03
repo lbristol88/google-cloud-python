@@ -40,7 +40,9 @@ def random_dataset_id(client):
     random_dataset_id = "example_dataset_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    return "{}.{}".format(client.project, random_dataset_id)
+    random_dataset = client.create_dataset(random_dataset_id)
+    yield "{}.{}".format(client.project, random_dataset.random_table_id)
+    client.delete_dataset(random_dataset, delete_contents=True, not_found_ok=True)
 
 
 @pytest.fixture
@@ -51,7 +53,7 @@ def dataset_id(client):
     )
     dataset = client.create_dataset(dataset_id)
     yield "{}.{}".format(dataset.project, dataset.dataset_id)
-    client.delete_dataset(dataset, delete_contents=True)
+    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
 
 
 @pytest.fixture
