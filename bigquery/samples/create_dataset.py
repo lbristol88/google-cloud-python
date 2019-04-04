@@ -28,7 +28,7 @@ def create_dataset(client, dataset_id):
     dataset = bigquery.Dataset(dataset_id)
 
     # TODO(developer): Specify the geographic location where the dataset should reside.
-    # dataset.location = "US"
+    dataset.location = "US"
 
     # Send the dataset to the API for creation.
     # Raises google.api_core.exceptions.Conflict if the Dataset already

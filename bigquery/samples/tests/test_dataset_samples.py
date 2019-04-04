@@ -20,3 +20,4 @@ def test_create_dataset(capsys, client, random_dataset_id):
     create_dataset.create_dataset(client, random_dataset_id)
     out, err = capsys.readouterr()
     assert "Created dataset {}".format(random_dataset_id) in out
+    client.delete_dataset(random_dataset_id, delete_contents=True, not_found_ok=True)
