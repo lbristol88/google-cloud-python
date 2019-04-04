@@ -40,9 +40,8 @@ def random_dataset_id(client):
     random_dataset_id = "example_dataset_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    dataset = client.create_dataset(random_dataset_id)
-    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
-    yield "{}.{}".format(client.project, dataset.dataset_id)
+    yield "{}.{}".format(client.project, random_dataset_id)
+    client.delete_dataset(random_dataset_id, delete_contents=True, not_found_ok=True)
 
 
 @pytest.fixture
