@@ -147,24 +147,6 @@ def test_create_client_json_credentials():
     assert client is not None
 
 
-def test_list_datasets(client):
-    """List datasets for a project."""
-    # [START bigquery_list_datasets]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-
-    datasets = list(client.list_datasets())
-    project = client.project
-
-    if datasets:
-        print("Datasets in project {}:".format(project))
-        for dataset in datasets:  # API request(s)
-            print("\t{}".format(dataset.dataset_id))
-    else:
-        print("{} project does not contain any datasets.".format(project))
-    # [END bigquery_list_datasets]
-
-
 def test_list_datasets_by_label(client, to_delete):
     dataset_id = "list_datasets_by_label_{}".format(_millis())
     dataset = bigquery.Dataset(client.dataset(dataset_id))
@@ -190,51 +172,6 @@ def test_list_datasets_by_label(client, to_delete):
     # [END bigquery_list_datasets_by_label]
     found = set([dataset.dataset_id for dataset in datasets])
     assert dataset_id in found
-
-
-def test_get_dataset_information(client, to_delete):
-    """View information about a dataset."""
-    dataset_id = "get_dataset_{}".format(_millis())
-    dataset_labels = {"color": "green"}
-    dataset_ref = client.dataset(dataset_id)
-    dataset = bigquery.Dataset(dataset_ref)
-    dataset.description = ORIGINAL_DESCRIPTION
-    dataset.labels = dataset_labels
-    dataset = client.create_dataset(dataset)  # API request
-    to_delete.append(dataset)
-
-    # [START bigquery_get_dataset]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_id = 'my_dataset'
-
-    dataset_ref = client.dataset(dataset_id)
-    dataset = client.get_dataset(dataset_ref)  # API request
-
-    # View dataset properties
-    print("Dataset ID: {}".format(dataset_id))
-    print("Description: {}".format(dataset.description))
-    print("Labels:")
-    labels = dataset.labels
-    if labels:
-        for label, value in labels.items():
-            print("\t{}: {}".format(label, value))
-    else:
-        print("\tDataset has no labels defined.")
-
-    # View tables in dataset
-    print("Tables:")
-    tables = list(client.list_tables(dataset_ref))  # API request(s)
-    if tables:
-        for table in tables:
-            print("\t{}".format(table.table_id))
-    else:
-        print("\tThis dataset does not contain any tables.")
-    # [END bigquery_get_dataset]
-
-    assert dataset.description == ORIGINAL_DESCRIPTION
-    assert dataset.labels == dataset_labels
-    assert tables == []
 
 
 # [START bigquery_dataset_exists]
@@ -429,45 +366,6 @@ def test_update_dataset_access(client, to_delete):
 
     assert entry in dataset.access_entries
     # [END bigquery_update_dataset_access]
-
-
-def test_delete_dataset(client):
-    """Delete a dataset."""
-    from google.cloud.exceptions import NotFound
-
-    dataset1_id = "delete_dataset_{}".format(_millis())
-    dataset1 = bigquery.Dataset(client.dataset(dataset1_id))
-    client.create_dataset(dataset1)
-
-    dataset2_id = "delete_dataset_with_tables{}".format(_millis())
-    dataset2 = bigquery.Dataset(client.dataset(dataset2_id))
-    client.create_dataset(dataset2)
-
-    table = bigquery.Table(dataset2.table("new_table"))
-    client.create_table(table)
-
-    # [START bigquery_delete_dataset]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-
-    # Delete a dataset that does not contain any tables
-    # dataset1_id = 'my_empty_dataset'
-    dataset1_ref = client.dataset(dataset1_id)
-    client.delete_dataset(dataset1_ref)  # API request
-
-    print("Dataset {} deleted.".format(dataset1_id))
-
-    # Use the delete_contents parameter to delete a dataset and its contents
-    # dataset2_id = 'my_dataset_with_tables'
-    dataset2_ref = client.dataset(dataset2_id)
-    client.delete_dataset(dataset2_ref, delete_contents=True)  # API request
-
-    print("Dataset {} deleted.".format(dataset2_id))
-    # [END bigquery_delete_dataset]
-
-    for dataset in [dataset1, dataset2]:
-        with pytest.raises(NotFound):
-            client.get_dataset(dataset)  # API request
 
 
 def test_list_tables(client, to_delete):
