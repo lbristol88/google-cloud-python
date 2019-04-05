@@ -217,66 +217,6 @@ def test_dataset_exists(client, to_delete):
         "https://github.com/GoogleCloudPlatform/google-cloud-python/issues/5588"
     )
 )
-def test_update_dataset_description(client, to_delete):
-    """Update a dataset's description."""
-    dataset_id = "update_dataset_description_{}".format(_millis())
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
-    dataset.description = "Original description."
-    client.create_dataset(dataset)
-    to_delete.append(dataset)
-
-    # [START bigquery_update_dataset_description]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_ref = client.dataset('my_dataset')
-    # dataset = client.get_dataset(dataset_ref)  # API request
-
-    assert dataset.description == "Original description."
-    dataset.description = "Updated description."
-
-    dataset = client.update_dataset(dataset, ["description"])  # API request
-
-    assert dataset.description == "Updated description."
-    # [END bigquery_update_dataset_description]
-
-
-@pytest.mark.skip(
-    reason=(
-        "update_dataset() is flaky "
-        "https://github.com/GoogleCloudPlatform/google-cloud-python/issues/5588"
-    )
-)
-def test_update_dataset_default_table_expiration(client, to_delete):
-    """Update a dataset's default table expiration."""
-    dataset_id = "update_dataset_default_expiration_{}".format(_millis())
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
-    dataset = client.create_dataset(dataset)
-    to_delete.append(dataset)
-
-    # [START bigquery_update_dataset_expiration]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset_ref = client.dataset('my_dataset')
-    # dataset = client.get_dataset(dataset_ref)  # API request
-
-    assert dataset.default_table_expiration_ms is None
-    one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
-    dataset.default_table_expiration_ms = one_day_ms
-
-    dataset = client.update_dataset(
-        dataset, ["default_table_expiration_ms"]
-    )  # API request
-
-    assert dataset.default_table_expiration_ms == one_day_ms
-    # [END bigquery_update_dataset_expiration]
-
-
-@pytest.mark.skip(
-    reason=(
-        "update_dataset() is flaky "
-        "https://github.com/GoogleCloudPlatform/google-cloud-python/issues/5588"
-    )
-)
 def test_manage_dataset_labels(client, to_delete):
     dataset_id = "label_dataset_{}".format(_millis())
     dataset = bigquery.Dataset(client.dataset(dataset_id))
@@ -332,40 +272,6 @@ def test_manage_dataset_labels(client, to_delete):
 
     assert dataset.labels == {}
     # [END bigquery_delete_label_dataset]
-
-
-@pytest.mark.skip(
-    reason=(
-        "update_dataset() is flaky "
-        "https://github.com/GoogleCloudPlatform/google-cloud-python/issues/5588"
-    )
-)
-def test_update_dataset_access(client, to_delete):
-    """Update a dataset's access controls."""
-    dataset_id = "update_dataset_access_{}".format(_millis())
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
-    dataset = client.create_dataset(dataset)
-    to_delete.append(dataset)
-
-    # [START bigquery_update_dataset_access]
-    # from google.cloud import bigquery
-    # client = bigquery.Client()
-    # dataset = client.get_dataset(client.dataset('my_dataset'))
-
-    entry = bigquery.AccessEntry(
-        role="READER",
-        entity_type="userByEmail",
-        entity_id="sample.bigquery.dev@gmail.com",
-    )
-    assert entry not in dataset.access_entries
-    entries = list(dataset.access_entries)
-    entries.append(entry)
-    dataset.access_entries = entries
-
-    dataset = client.update_dataset(dataset, ["access_entries"])  # API request
-
-    assert entry in dataset.access_entries
-    # [END bigquery_update_dataset_access]
 
 
 def test_list_tables(client, to_delete):
