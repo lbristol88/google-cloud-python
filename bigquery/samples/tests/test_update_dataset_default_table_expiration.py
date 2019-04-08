@@ -12,23 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import create_dataset
 from .. import update_dataset_default_table_expiration
 
 
-def test_update_dataset_default_table_expiration(
-    capsys, client, random_dataset_id, one_day_ms
-):
-
-    create_dataset.create_dataset(client, random_dataset_id)
+def test_update_dataset_default_table_expiration(capsys, client, dataset_id):
 
     update_dataset_default_table_expiration.update_dataset_default_table_expiration(
-        client, random_dataset_id, one_day_ms
+        client, dataset_id
     )
     out, err = capsys.readouterr()
     assert (
         "Updated dataset {} with new expiration {}".format(
-            random_dataset_id, one_day_ms
+            dataset_id, 24 * 60 * 60 * 1000
         )
         in out
     )

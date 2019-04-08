@@ -26,12 +26,6 @@ def client():
 
 
 @pytest.fixture
-def one_day_ms(client):
-    one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
-    return one_day_ms
-
-
-@pytest.fixture
 def random_table_id(client, dataset_id):
     now = datetime.datetime.now()
     random_table_id = "example_table_{}_{}".format(

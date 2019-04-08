@@ -15,8 +15,8 @@
 from .. import delete_dataset
 
 
-def test_delete_dataset(capsys, client, random_dataset_id):
+def test_delete_dataset(capsys, client, dataset_id):
 
-    delete_dataset.delete_dataset(client, random_dataset_id)
+    delete_dataset.delete_dataset(client, dataset_id)
     out, err = capsys.readouterr()
-    assert "Deleted dataset '{}'.".format(random_dataset_id) in out
+    assert "Deleted dataset '{}'.".format(dataset_id) in out

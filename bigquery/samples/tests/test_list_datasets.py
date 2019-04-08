@@ -15,7 +15,7 @@
 from .. import list_datasets
 
 
-def test_list_datasets(capsys, client, random_dataset_id):
+def test_list_datasets(capsys, client, dataset_id):
 
     list_datasets.list_datasets(client)
     out, err = capsys.readouterr()

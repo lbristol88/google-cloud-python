@@ -12,17 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import create_dataset
 from .. import update_dataset_access
 
 
-def test_update_dataset_access(capsys, client, random_dataset_id):
+def test_update_dataset_access(capsys, client, dataset_id):
 
-    create_dataset.create_dataset(client, random_dataset_id)
-
-    update_dataset_access.update_dataset_access(client, random_dataset_id)
+    update_dataset_access.update_dataset_access(client, dataset_id)
     out, err = capsys.readouterr()
     assert (
-        "Updated dataset '{}' with modified user permissions.".format(random_dataset_id)
-        in out
+        "Updated dataset '{}' with modified user permissions.".format(dataset_id) in out
     )
