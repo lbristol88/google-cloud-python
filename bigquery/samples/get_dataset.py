@@ -35,7 +35,6 @@ def get_dataset(client, dataset_id):
     )
 
     # View dataset properties
-    print("Dataset ID: {}".format(dataset_id))
     print("Description: {}".format(dataset.description))
     print("Labels:")
     labels = dataset.labels

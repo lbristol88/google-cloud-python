@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-def update_dataset_default_table_expiration(client, dataset_id):
+def update_dataset_default_table_expiration(client, dataset_id, one_day_ms):
 
-    # [START bigquery_update_dataset_default_table_expiration]
+    # [START bigquery_update_dataset_expiration]
     from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
@@ -25,7 +25,6 @@ def update_dataset_default_table_expiration(client, dataset_id):
     # dataset_id = 'your-project.your_dataset'
 
     dataset = client.get_dataset(dataset_id)
-    one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
     dataset.default_table_expiration_ms = one_day_ms
 
     dataset = client.update_dataset(
@@ -33,5 +32,9 @@ def update_dataset_default_table_expiration(client, dataset_id):
     )  # API request
 
     full_dataset_id = "{}.{}".format(dataset.project, dataset.dataset_id)
-    print("Updated dataset {}".format(full_dataset_id))
-    # [END bigquery_update_dataset_default_table_expiration]
+    print(
+        "Updated dataset {} with new expiration {}".format(
+            full_dataset_id, dataset.default_table_expiration_ms
+        )
+    )
+    # [END bigquery_update_dataset_expiration]
