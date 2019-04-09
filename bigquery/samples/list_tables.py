@@ -29,7 +29,5 @@ def list_tables(client, dataset_id):
 
     print("Tables contained in '{}':".format(dataset_id))
     for table in tables:
-        full_table_id = "{}.{}".format(table.project, table.dataset_id)
-        friendly_name = table.friendly_name
-        print("{}: friendly_name='{}'".format(full_table_id, friendly_name))
+        print("{}.{}.{}".format(table.project, table.dataset_id, table.table_id))
     # [END bigquery_list_tables]

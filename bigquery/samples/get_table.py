@@ -26,9 +26,12 @@ def get_table(client, table_id):
 
     table = client.get_table(table_id)
 
-    full_table_id = "{}.{}.{}".format(table.project, table.dataset_id, table.table_id)
-    friendly_name = table.friendly_name
     print(
-        "Got table '{}' with friendly_name '{}'.".format(full_table_id, friendly_name)
+        "Got table '{}.{}.{}'.".format(table.project, table.dataset_id, table.table_id)
     )
+
+    # View table properties
+    print("Table schema: {}".format(table.schema))
+    print("Table description: {}".format(table.description))
+    print("Table has {} rows".format(table.num_rows))
     # [END bigquery_get_table]

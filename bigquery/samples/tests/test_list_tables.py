@@ -12,26 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import create_table
 from .. import list_tables
-from .. import get_table
-from .. import delete_table
 
 
-def test_table_samples(capsys, client, random_table_id, dataset_id):
-
-    create_table.create_table(client, random_table_id)
-    out, err = capsys.readouterr()
-    assert "Created table {}".format(random_table_id) in out
+def test_list_tables(capsys, client, dataset_id, table_id):
 
     list_tables.list_tables(client, dataset_id)
     out, err = capsys.readouterr()
     assert "Tables contained in '{}':".format(dataset_id) in out
-
-    get_table.get_table(client, random_table_id)
-    out, err = capsys.readouterr()
-    assert random_table_id in out
-
-    delete_table.delete_table(client, random_table_id)
-    out, err = capsys.readouterr()
-    assert "Deleted table '{}'.".format(random_table_id) in out
+    assert "{}".format(table_id) in out
