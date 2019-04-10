@@ -61,12 +61,8 @@ def table_id(client, dataset_id):
     table_id = "python_samples_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    schema = [
-        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
-    ]
-    table = bigquery.Table("{}.{}".format(dataset_id, table_id), schema)
-    table.description = "Sample Table"
+
+    table = bigquery.Table("{}.{}".format(dataset_id, table_id))
     table = client.create_table(table)
     yield "{}.{}.{}".format(table.project, table.dataset_id, table.table_id)
     client.delete_table(table, not_found_ok=True)

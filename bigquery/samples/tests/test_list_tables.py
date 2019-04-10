@@ -20,4 +20,4 @@ def test_list_tables(capsys, client, dataset_id, table_id):
     list_tables.list_tables(client, dataset_id)
     out, err = capsys.readouterr()
     assert "Tables contained in '{}':".format(dataset_id) in out
-    assert "{}".format(table_id) in out
+    assert table_id in out

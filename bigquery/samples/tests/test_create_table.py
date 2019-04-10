@@ -12,19 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import create_table
 
-def delete_table(client, table_id):
 
-    # [START bigquery_delete_table]
-    from google.cloud import bigquery
+def test_create_table(capsys, client, random_table_id):
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
-
-    # TODO(developer): Set table_id to the ID of the table to fetch.
-    # table_id = 'your-project.your_dataset.your_table'
-
-    # Raises google.api_core.exceptions.NotFound unless not_found_ok is True
-    client.delete_table(table_id, not_found_ok=True)
-    print("Deleted table '{}'.".format(table_id))
-    # [END bigquery_delete_table]
+    create_table.create_table(client, random_table_id)
+    out, err = capsys.readouterr()
+    assert "Created table {}".format(random_table_id) in out

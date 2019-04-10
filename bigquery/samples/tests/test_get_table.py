@@ -12,15 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import create_table
+from google.cloud import bigquery
 from .. import get_table
 
 
-def test_get_table(capsys, client, table_id):
+def test_get_table(capsys, client, random_table_id):
+    schema = [
+        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    ]
 
-    get_table.get_table(client, table_id)
+    table = bigquery.Table(random_table_id, schema)
+    table.description = "Sample Table"
+    table = client.create_table(table)
+
+    get_table.get_table(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "Got table '{}'.".format(table_id) in out
+    assert "Got table '{}'.".format(random_table_id) in out
     assert "full_name" in out  # test that schema is printed
     assert "Table description: Sample Table" in out
     assert "Table has 0 rows" in out
+    client.delete_table(table, not_found_ok=True)
